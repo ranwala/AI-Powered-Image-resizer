@@ -8,7 +8,7 @@ load_dotenv()
 
 class AIService:
     def __init__(self):
-        self.llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash")
+        self.llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash-lite")
 
     def analyse_image(self, base64_encoded_image):
 
@@ -33,9 +33,6 @@ class AIService:
             )
         ]
 
-        try:
-            response = self.llm.invoke(messages)
-            json_response = json.loads(response.content)
-            return json_response['people_present']
-        except Exception as e:
-            print(e)
+        response = self.llm.invoke(messages)
+        json_response = json.loads(response.content)
+        return json_response['people_present']

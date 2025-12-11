@@ -23,58 +23,48 @@ class ImageService:
 
     def __save_resized_image(self, resized_image, base_name):
         """ Save resized image """
-        try:
-            output_dir_path = os.path.dirname(self.__output_dir)
 
-            if not output_dir_path:
-                os.makedirs(self.__output_dir, exist_ok=True)
+        output_dir_path = os.path.dirname(self.__output_dir)
 
-            resized_image.save(f"{self.__output_dir}/resized_{base_name}")
+        if not output_dir_path:
+            os.makedirs(self.__output_dir, exist_ok=True)
 
-        except FileNotFoundError as e:
-            print(f"Create out put directory error: {e}")
+        resized_image.save(f"{self.__output_dir}/resized_{base_name}")
 
 
     def get_all_image_paths(self):
         """ Get all image paths """
 
-        try:
-            for ext in self.__extensions:
-                self.__image_paths.extend(glob.glob(os.path.join(self.__base_path, ext)))
+        for ext in self.__extensions:
+            self.__image_paths.extend(glob.glob(os.path.join(self.__base_path, ext)))
 
-            return self.__image_paths
-
-        except FileNotFoundError as e:
-            print(f"Get all image paths error: {e}")
+        return self.__image_paths
 
 
     def resize_image(self, image_paths):
         """ Resize images """
 
-        print("AI powered image resizing start...")
-        try:
-            for image_path in image_paths:
-                image = Image.open(image_path)
-                w, h = image.size
+        print("AI powered image resizing start...\n")
 
-                # Encode to base 64
-                encoded_image = self.__encode_image(image_path)
+        for image_path in image_paths:
+            image = Image.open(image_path)
+            w, h = image.size
 
-                # Analyse by AI
-                ai_response = self.__ai_service.analyse_image(encoded_image)
+            # Encode to base 64
+            encoded_image = self.__encode_image(image_path)
 
-                if not ai_response:
-                    print(f'📸 {os.path.basename(image_path)}')
+            # Analyse by AI
+            ai_response = self.__ai_service.analyse_image(encoded_image)
 
-                    new_size = (int(w * 0.5), int(h * 0.5))
+            if not ai_response:
+                print(f'📸 {os.path.basename(image_path)}')
 
-                    print(f'✅ Resized to: {new_size[0]}x{new_size[1]} \n')
+                new_size = (int(w * 0.5), int(h * 0.5))
 
-                    resized_image = image.resize(new_size)
+                print(f'✅ Resized to: {new_size[0]}x{new_size[1]} \n')
 
-                    self.__save_resized_image(resized_image, os.path.basename(image_path))
+                resized_image = image.resize(new_size)
 
-            print("AI powered image resizing finish...")
+                self.__save_resized_image(resized_image, os.path.basename(image_path))
 
-        except Exception as e:
-            print(f"Resize image error: {e}")
+        print("AI powered image resizing finish...")
