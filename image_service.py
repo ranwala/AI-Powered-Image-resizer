@@ -6,11 +6,11 @@ from PIL import Image
 from ai_service import AIService
 
 class ImageService:
-    def __init__(self):
-        self.__base_path = 'images/'
+    def __init__(self, base_path='images/', output_dir='resized_images'):
+        self.__base_path = base_path
         self.__extensions = ['*.jpg', '*.jpeg', '*.png']
         self.__image_paths = []
-        self.__output_dir = 'resized_images'
+        self.__output_dir = output_dir
         self.__ai_service = AIService()
 
 
